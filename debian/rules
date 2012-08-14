@@ -1,0 +1,17 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+# debian rules for libccv
+#
+# Written by Thomas Meson <zllak@hycik.org>
+
+# Uncomment this to turn on verbose mode
+export DH_VERBOSE=1
+
+%:
+	dh $@ 
+
+override_dh_auto_configure:
+	dh_auto_configure -Dlib
+
+override_dh_auto_build:
+	dh_auto_build -Blib

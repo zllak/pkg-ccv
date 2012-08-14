@@ -1,0 +1,6 @@
+libccv (0.1~rc1-1) unstable; urgency=low
+
+  This first package version relies on a still "not-released" version of ccv.
+  You must know what you're doing.
+
+ -- Thomas Meson <zllak@hycik.org>  Tue, 14 Aug 2012 18:01:04 +0200

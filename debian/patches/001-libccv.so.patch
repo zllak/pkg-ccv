@@ -1,0 +1,52 @@
+diff --git a/lib/makefile b/lib/makefile
+index 93bb28d..3b38765 100644
+--- a/lib/makefile
++++ b/lib/makefile
+@@ -1,5 +1,14 @@
+ CC = `cat .CC`# -faddress-sanitizer -fno-omit-frame-pointer
+ CFLAGS = -O3 -ffast-math -Wall `cat .DEF`# -fprofile-arcs -ftest-coverage
++SFLAGS = -O3 -fPIC -ffast-math -Wall `cat .DEF`
++STATICLIB = libccv.a
++SHAREDLIB = libccv.so
++SHAREDLIBV = libccv.so.0.1.0
++SHAREDLIBM = libccv.so.0
++LDFLAGS = `cat .LN`
++LDSHARED = $(CC) -shared -Wl,-soname,$(SHAREDLIBM) $(LDFLAGS)
++OBJS = ccv_cache.o ccv_memory.o 3rdparty/sha1/sha1.o 3rdparty/kissfft/kiss_fft.o 3rdparty/kissfft/kiss_fftnd.o 3rdparty/kissfft/kiss_fftr.o 3rdparty/kissfft/kiss_fftndr.o 3rdparty/kissfft/kissf_fft.o 3rdparty/kissfft/kissf_fftnd.o 3rdparty/kissfft/kissf_fftr.o 3rdparty/kissfft/kissf_fftndr.o ccv_io.o ccv_numeric.o ccv_algebra.o ccv_util.o ccv_basic.o ccv_resample.o ccv_classic.o ccv_daisy.o ccv_sift.o ccv_bbf.o ccv_mser.o ccv_swt.o ccv_dpm.o
++PIC_OBJS = ccv_cache.lo ccv_memory.lo 3rdparty/sha1/sha1.lo 3rdparty/kissfft/kiss_fft.lo 3rdparty/kissfft/kiss_fftnd.lo 3rdparty/kissfft/kiss_fftr.lo 3rdparty/kissfft/kiss_fftndr.lo 3rdparty/kissfft/kissf_fft.lo 3rdparty/kissfft/kissf_fftnd.lo 3rdparty/kissfft/kissf_fftr.lo 3rdparty/kissfft/kissf_fftndr.lo ccv_io.lo ccv_numeric.lo ccv_algebra.lo ccv_util.lo ccv_basic.lo ccv_resample.lo ccv_classic.lo ccv_daisy.lo ccv_sift.lo ccv_bbf.lo ccv_mser.lo ccv_swt.lo ccv_dpm.lo
+ 
+ config:
+ 	@./configure
+@@ -9,14 +18,29 @@ force: clean
+ 	@./configure force
+ 	@make all
+ 
+-all: libccv.a
++all: $(STATICLIB) $(SHAREDLIBV)
+ 
+ clean:
+-	rm -f *.o 3rdparty/sha1/*.o 3rdparty/kissfft/*.o libccv.a
++	rm -f $(OBJS) $(STATICLIB) $(SHAREDLIBV)
++	rm -rf objs
+ 
+-libccv.a: ccv_cache.o ccv_memory.o 3rdparty/sha1/sha1.o 3rdparty/kissfft/kiss_fft.o 3rdparty/kissfft/kiss_fftnd.o 3rdparty/kissfft/kiss_fftr.o 3rdparty/kissfft/kiss_fftndr.o 3rdparty/kissfft/kissf_fft.o 3rdparty/kissfft/kissf_fftnd.o 3rdparty/kissfft/kissf_fftr.o 3rdparty/kissfft/kissf_fftndr.o ccv_io.o ccv_numeric.o ccv_algebra.o ccv_util.o ccv_basic.o ccv_resample.o ccv_classic.o ccv_daisy.o ccv_sift.o ccv_bbf.o ccv_mser.o ccv_swt.o ccv_dpm.o
++$(STATICLIB): $(OBJS)
+ 	ar rcs $@ $^
+ 
++.SUFFIXES: .lo
++
++.c.lo:
++	-@if [ ! -d objs ]; then mkdir objs; fi
++	@echo "$(CC) $(SFLAGS) -DPIC -c -o $(addsuffix .lo,$(addprefix objs/,$(notdir $*))) $<"
++	@$(CC) $(SFLAGS) -DPIC -c -o $(addsuffix .lo,$(addprefix objs/,$(notdir $*))) $<
++
++$(SHAREDLIBV): $(PIC_OBJS)
++	$(LDSHARED) $(SFLAGS) -o $@ $(addprefix objs/,$(notdir $(PIC_OBJS))) -lc
++	rm -f $(SHAREDLIB) $(SHAREDLIBM)
++	ln -s $@ $(SHAREDLIB)
++	ln -s $@ $(SHAREDLIBM)
++	-@rm -rf objs
++
+ ccv_io.o: ccv_io.c ccv.h ccv_internal.h io/*.c
+ 	@echo "$(CC) $< -o $@ -c $(CFLAGS)"
+ 	@$(CC) $< -o $@ -c $(CFLAGS)

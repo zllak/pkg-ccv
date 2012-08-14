@@ -1,0 +1,34 @@
+Source: libccv
+Section: libs
+Priority: extra
+Maintainer: Thomas Meson <zllak@hycik.org>
+Build-Depends: debhelper (>= 8.0.0), dpkg-dev (>= 1.15.8.12), quilt,
+ clang (>= 2.7), libpng12-dev, libjpeg8-dev, libfftw3-dev, libblas-dev,
+ libgsl0-dev, liblinear-dev
+Standards-Version: 3.9.3
+Homepage: https://github.com/liuliu/ccv
+Vcs-Git: git://github.com/liuliu/ccv.git
+Vcs-Browser: https://github.com/liuliu/ccv
+
+Package: libccv
+Section: libs
+Architecture: any
+Depends: libpng12-0, libjpeg8, libfftw3-3, libblas3gf, libgsl0ldbl,
+ liblinear1, ${shlibs:Depends}, ${misc:Depends}
+Description: C-based/Cached/Core Computer Vision Library
+ ccv end up implementing a handful state-of-art algorithms.
+ It includes a very fast detection algorithm for rigid object (face, etc..),
+ an accurate object detection algorithm for somewhat difficult object
+ (pedestrian, cat, etc..), a state-of-art text detection algorithm,
+ and the long-standing feature point detection algorithm.
+
+Package: libccv-dev
+Section: libdevel
+Architecture: any
+Depends: libccv (= ${binary:Version}), ${misc:Depends}
+Description: C-based/Cached/Core Computer Vision Library (development files)
+ ccv end up implementing a handful state-of-art algorithms.
+ It includes a very fast detection algorithm for rigid object (face etc.),
+ an accurate object detection algorithm for somewhat difficult object
+ (pedestrian, cat etc.), a state-of-art text detection algorithm,
+ and the long-standing feature point detection algorithm.
