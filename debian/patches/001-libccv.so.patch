@@ -8,7 +8,7 @@ index 93bb28d..3b38765 100644
 +SFLAGS = -O3 -fPIC -ffast-math -Wall `cat .DEF`
 +STATICLIB = libccv.a
 +SHAREDLIB = libccv.so
-+SHAREDLIBV = libccv.so.0.1.0
++SHAREDLIBV = libccv.so.0.2.0
 +SHAREDLIBM = libccv.so.0
 +LDFLAGS = `cat .LN`
 +LDSHARED = $(CC) -shared -Wl,-soname,$(SHAREDLIBM) $(LDFLAGS)
